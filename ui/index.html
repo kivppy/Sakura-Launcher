@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Sakura Launcher</title>
+<link rel="stylesheet" href="style.css" id="mainStylesheet">
+</head>
+<body>
+
+  <div class="app-petals-bg" aria-hidden="true">
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span>
+  </div>
+
+  <div class="toast-stack" id="toastStack"></div>
+
+  <div class="discord-corner" id="discordCorner">
+    <button class="discord-connect-btn" id="discordConnectBtn">
+      <svg viewBox="0 0 24 24" class="discord-logo"><path d="M20.3 5.4A17.6 17.6 0 0 0 15.9 4c-.2.4-.5.9-.6 1.3a16.5 16.5 0 0 0-4.6 0A8.6 8.6 0 0 0 10 4a17.6 17.6 0 0 0-4.4 1.4C2.9 9.1 2.2 12.7 2.5 16.2a17.7 17.7 0 0 0 5.4 2.7c.4-.6.8-1.2 1.1-1.9-.6-.2-1.2-.5-1.7-.9l.4-.3c3.3 1.5 6.9 1.5 10.2 0l.4.3c-.5.4-1.1.7-1.7.9.3.7.7 1.3 1.1 1.9a17.6 17.6 0 0 0 5.4-2.7c.4-4-.6-7.6-2.8-10.8ZM9.7 14c-.9 0-1.7-.9-1.7-1.9s.7-1.9 1.7-1.9 1.7.9 1.7 1.9-.8 1.9-1.7 1.9Zm5.6 0c-.9 0-1.7-.9-1.7-1.9s.7-1.9 1.7-1.9 1.7.9 1.7 1.9-.7 1.9-1.7 1.9Z"/></svg>
+      <span>Conectar con Discord</span>
+    </button>
+    <div class="discord-card hidden" id="discordCard">
+      <img class="discord-avatar" id="discordAvatar" src="" alt="Avatar de Discord">
+      <div class="discord-card-info">
+        <span class="discord-card-name" id="discordUsername">—</span>
+        <span class="discord-card-tag">Conectado</span>
+      </div>
+      <button class="discord-disconnect" id="discordDisconnectBtn" title="Desconectar">
+        <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="shell">
+
+    <!-- Rail lateral -->
+    <aside class="rail">
+      <button class="rail-btn" id="rail-menu" title="Menú">
+        <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+      <div class="rail-sep"></div>
+      <button class="rail-btn active" title="Inicio">
+        <svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg>
+      </button>
+      <button class="rail-btn" title="Biblioteca">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg>
+      </button>
+      <button class="rail-btn" id="rail-add" title="Agregar app">
+        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+      </button>
+      <button class="rail-btn" id="rail-wine-setup" title="Wine Setup">
+        <svg viewBox="0 0 24 24" class="sakura-rail-icon"><path d="M12 12c0-2.5-1-4.5-3-6 2.5 0 4.5 1 6 3 1.5-2 3.5-3 6-3-2 1.5-3 3.5-3 6s1 4.5 3 6c-2.5 0-4.5-1-6-3-1.5 2-3.5 3-6 3 2-1.5 3-3.5 3-6Z"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/></svg>
+      </button>
+      <button class="rail-btn" id="rail-wine-config" title="Configurar Wine">
+        <svg viewBox="0 0 24 24"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/><path d="M19.4 13.5c.04-.5.04-1 0-1.5l1.9-1.4-2-3.4-2.2.7c-.4-.3-.8-.6-1.3-.8L15.4 5h-4l-.4 2.1c-.5.2-.9.5-1.3.8l-2.2-.7-2 3.4 1.9 1.4c-.04.5-.04 1 0 1.5l-1.9 1.4 2 3.4 2.2-.7c.4.3.8.6 1.3.8L11.4 21h4l.4-2.1c.5-.2.9-.5 1.3-.8l2.2.7 2-3.4-1.9-1.4Z"/></svg>
+      </button>
+      <button class="rail-btn" id="rail-themes" title="Temas">
+        <svg viewBox="0 0 24 24"><path d="M4.5 19.5c0-2 1.2-3.2 3-3.2s3 1.2 3 3.2"/><path d="M9.2 13.8 18.8 4.2c.9-.9 2.3-.9 3.1 0 .9.9.9 2.3 0 3.1L12.3 16.9"/><path d="M9.2 13.8c-1 1-2.1 1.6-3.2 1.9"/></svg>
+      </button>
+      <button class="rail-btn" id="rail-detect" title="Detección automática">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/><path d="M11 8v3l2 2"/></svg>
+      </button>
+      <button class="rail-btn" id="rail-diagnostics" title="Diagnóstico">
+        <svg viewBox="0 0 24 24"><path d="M9 3h6v4l4 4v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7l4-4Z"/><path d="M9 15h6M12 11v4"/></svg>
+      </button>
+      <button class="rail-btn" id="rail-fpstation" title="FPStation: activar/desactivar overlay de rendimiento">
+        <svg viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18Z"/><path d="M12 12 16 8"/><path d="M12 6.5v1M17.5 12h-1M12 17.5v-1M6.5 12h1"/></svg>
+      </button>
+      <button class="rail-btn" id="rail-fpstation-config" title="Configurar FPStation">
+        <svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.04 1.56V21a2 2 0 1 1-4 0v-.09A1.7 1.7 0 0 0 8.96 19.3a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.56-1.04H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.7 8.96a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9.06 4.6a1.7 1.7 0 0 0 1.04-1.56V3a2 2 0 1 1 4 0v.09A1.7 1.7 0 0 0 15.14 4.6a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v.06a1.7 1.7 0 0 0 1.56 1.04H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.56 1.04Z"/></svg>
+      </button>
+      <button class="rail-btn" id="rail-backup" title="Backup">
+        <svg viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+      </button>
+      <div class="rail-spacer"></div>
+      <button class="rail-btn hidden" id="rail-update" title="Actualización disponible">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+        <span class="rail-update-dot"></span>
+      </button>
+      <button class="rail-btn" id="rail-logs" title="Logs">
+        <svg viewBox="0 0 24 24"><path d="M4 19V5a2 2 0 0 1 2-2h8l6 6v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M14 3v6h6"/></svg>
+      </button>
+
+      <!-- Panel del menú: aparece abajo del rail al togglear -->
+      <div class="rail-menu hidden" id="railMenu">
+        <button class="rail-menu-item" id="link-github">
+          <svg viewBox="0 0 24 24" class="rail-menu-icon"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.5 0-.24-.01-1.04-.01-1.88-2.78.62-3.37-1.22-3.37-1.22-.46-1.2-1.11-1.52-1.11-1.52-.9-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.57 2.34 1.11 2.91.85.09-.67.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05a9.3 9.3 0 0 1 5 0c1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.79-4.57 5.05.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .28.18.6.69.5A10.26 10.26 0 0 0 22 12.25C22 6.58 17.52 2 12 2Z"/></svg>
+          <span>GitHub</span>
+        </button>
+        <button class="rail-menu-item" id="link-telegram">
+          <svg viewBox="0 0 24 24" class="rail-menu-icon"><path d="m21.5 3-19 7.6c-1 .4-1 1.53.05 1.86l4.7 1.5 1.8 5.68c.28.87 1.38 1.13 2.02.47l2.55-2.62 4.6 3.4c.85.63 2.06.17 2.28-.85l3.1-15.02c.23-1.1-.85-2-1.9-1.02Zm-3.4 3.3-8.6 7.86-.35 3.6-1.6-5.05 10.55-6.4Z"/></svg>
+          <span>Telegram</span>
+        </button>
+        <button class="rail-menu-item" id="link-twitter">
+          <svg viewBox="0 0 24 24" class="rail-menu-icon"><path d="M18.9 2H22l-7.6 8.7L23.3 22h-7l-5.5-7.2L4.5 22H1.4l8.1-9.3L1 2h7.2l5 6.6L18.9 2Zm-1.2 18h1.7L6.4 3.9H4.6L17.7 20Z"/></svg>
+          <span>Twitter</span>
+        </button>
+        <button class="rail-menu-item" id="link-discord-community">
+          <svg viewBox="0 0 24 24" class="rail-menu-icon"><path d="M20.3 5.4A17.6 17.6 0 0 0 15.9 4c-.2.4-.5.9-.6 1.3a16.4 16.4 0 0 0-4.6 0A9 9 0 0 0 10 4a17.6 17.6 0 0 0-4.4 1.4C2.9 9.3 2.2 13 2.5 16.7A17.7 17.7 0 0 0 7.9 19c.4-.6.8-1.2 1.1-1.9-.6-.2-1.2-.5-1.7-.9l.4-.3c3.3 1.5 6.9 1.5 10.2 0l.4.3c-.5.4-1.1.7-1.7.9.3.7.7 1.3 1.1 1.9a17.6 17.6 0 0 0 5.4-2.3c.4-4.3-.7-8-2.8-11.3ZM9.7 14.4c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2Zm5.6 0c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2Z"/></svg>
+          <span>Discord</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Contenido principal -->
+    <div class="main">
+
+      <!-- Barra superior: buscador + orden + filtros + fila de apps -->
+      <header class="topbar">
+        <div class="search-sort-row">
+          <div class="search-box">
+            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+            <input id="searchInput" type="text" placeholder="Buscar en tu biblioteca… (Ctrl+K)" autocomplete="off">
+            <button class="search-clear hidden" id="searchClearBtn" title="Limpiar">
+              <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
+            </button>
+          </div>
+          <div class="sort-box">
+            <label for="sortSelect" class="sort-label">Ordenar</label>
+            <select id="sortSelect">
+              <option value="name">Nombre</option>
+              <option value="favorite">Favoritos</option>
+              <option value="playtime">Tiempo jugado</option>
+              <option value="last_played">Último lanzamiento</option>
+              <option value="added">Fecha de agregado</option>
+            </select>
+          </div>
+          <div class="filters" id="filters"></div>
+        </div>
+        <div class="app-strip-wrap">
+          <button class="strip-nav prev" id="strip-prev">‹</button>
+          <div class="app-strip" id="appStrip"></div>
+          <button class="strip-nav next" id="strip-next">›</button>
+          <button class="strip-add" id="strip-add" title="Agregar app">+</button>
+        </div>
+      </header>
+
+      <!-- Hero: arte del juego seleccionado -->
+      <main class="hero" id="hero">
+        <div class="hero-bg" id="heroBg"></div>
+        <div class="hero-scrim"></div>
+
+        <div class="hero-content">
+          <div class="hero-logo" id="heroLogo"></div>
+
+          <div class="hero-bottom">
+            <div class="hero-action">
+              <button class="btn-install" id="playBtn">
+                <span id="playBtnLabel">JUGAR</span>
+                <svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg>
+              </button>
+              <button class="btn-close hidden" id="closeBtn">Cerrar</button>
+            </div>
+
+            <div class="hero-stats">
+              <div class="stat">
+                <span class="stat-label">Tipo</span>
+                <span class="stat-value" id="statType">—</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">Tiempo jugado</span>
+                <span class="stat-value" id="statPlaytime">0h</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">Categoría</span>
+                <span class="stat-value" id="statCategory">—</span>
+              </div>
+              <div class="stat" id="statRunnerWrap" style="display:none">
+                <span class="stat-label">Motor</span>
+                <span class="stat-value" id="statRunner">—</span>
+              </div>
+              <div class="stat" id="statWarnWrap" style="display:none">
+                <span class="stat-label">Dependencias</span>
+                <span class="stat-value warn" id="statWarn">—</span>
+              </div>
+            </div>
+
+            <div class="hero-toolbar">
+              <button class="icon-chip" id="favBtn" title="Favorita">
+                <svg viewBox="0 0 24 24"><path d="M12 3.5 14.9 9.4l6.5.9-4.7 4.6 1.1 6.5-5.8-3-5.8 3 1.1-6.5-4.7-4.6 6.5-.9Z"/></svg>
+              </button>
+              <button class="icon-chip hidden" id="repairBtn" title="Reparar entorno">
+                <svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.7 2.7-2.3-2.3Z"/></svg>
+              </button>
+              <button class="icon-chip" id="prepareBtn" title="Preparar aplicación">
+                <svg viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/></svg>
+              </button>
+              <button class="icon-chip danger" id="delBtn" title="Eliminar">
+                <svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-13"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-empty hidden" id="heroEmpty">
+          <svg class="hero-empty-icon" viewBox="0 0 100 100">
+            <path d="M50 50 C40 30, 20 25, 12 10 C28 15, 42 28, 50 50 Z"/>
+            <path d="M50 50 C65 32, 85 30, 96 16 C85 28, 68 32, 50 50 Z"/>
+            <path d="M50 50 C62 62, 82 68, 92 84 C76 78, 62 68, 50 50 Z"/>
+            <path d="M50 50 C36 65, 18 68, 6 86 C18 72, 34 66, 50 50 Z"/>
+            <path d="M50 50 C55 30, 48 12, 54 2 C58 16, 58 34, 50 50 Z"/>
+          </svg>
+          <div class="hero-empty-title">No hay apps todavía</div>
+          <div class="hero-empty-sub">Agregá tu primer juego o app con el botón +</div>
+          <button class="btn-install" id="emptyAddBtn">
+            <span>Agregar app</span>
+            <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+        </div>
+      </main>
+
+    </div>
+  </div>
+
+  <!-- Modal: agregar app -->
+  <div id="addModal" class="modal-overlay hidden">
+    <div class="modal add-modal">
+      <div class="add-modal-head">
+        <h2>Agregar app</h2>
+        <p class="add-modal-sub">Elegí el tipo, buscá el archivo y listo — el nombre se completa solo.</p>
+      </div>
+
+      <!-- Paso 1: tipo -->
+      <label class="field-label">¿Qué tipo de app es?</label>
+      <div class="type-grid" id="typeGrid"></div>
+
+      <!-- Paso 2: archivo / ID -->
+      <label class="field-label" id="lbl-exe">Archivo</label>
+      <button class="picker-btn" id="pickExeBtn" type="button">
+        <svg viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+        <span id="pickExeLabel">Elegir archivo…</span>
+      </button>
+      <div class="picked-path hidden" id="pickedPathWrap">
+        <span class="picked-path-text" id="pickedPathText"></span>
+        <button class="picked-path-edit" id="editPathBtn" type="button" title="Editar manualmente">
+          <svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+        </button>
+      </div>
+      <input id="f-exe" type="text" class="hidden" placeholder="/ruta/al/archivo o Application ID">
+
+      <!-- Nombre (autocompletado) -->
+      <label class="field-label">Nombre</label>
+      <div class="name-field">
+        <input id="f-name" type="text" placeholder="Se completa al elegir el archivo">
+        <span class="name-auto-badge hidden" id="nameAutoBadge">Detectado</span>
+      </div>
+
+      <!-- Portada (buscada automáticamente en internet) -->
+      <div class="cover-section hidden" id="coverSection">
+        <label class="field-label">Portada</label>
+
+        <div class="cover-loading hidden" id="coverLoading">
+          <span class="cover-spinner"></span> Buscando portadas para "<span id="coverLoadingName"></span>"…
+        </div>
+
+        <div class="cover-options hidden" id="coverOptions"></div>
+
+        <div class="cover-empty hidden" id="coverEmptyMsg">
+          No encontramos portadas para este nombre. Podés poner una a mano en "Opciones avanzadas".
+        </div>
+
+        <div class="cover-selected hidden" id="coverSelectedWrap">
+          <img id="coverSelectedImg" class="cover-selected-img">
+          <span class="cover-selected-text">Portada elegida</span>
+          <button class="cover-selected-clear" id="coverClearBtn" type="button" title="Quitar">
+            <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Categoría -->
+      <label class="field-label">Categoría</label>
+      <input id="f-category" type="text" list="category-list" placeholder="General, Shooters, Horror...">
+      <datalist id="category-list"></datalist>
+
+      <!-- Opciones avanzadas, colapsadas -->
+      <button class="advanced-toggle" id="advancedToggle" type="button">
+        <span>Opciones avanzadas</span>
+        <svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+
+      <div class="advanced-fields hidden" id="advancedFields">
+        <label class="field-label">Cover art manual</label>
+        <p class="field-hint">Usá esto si preferís poner tu propia imagen en vez de las sugeridas arriba.</p>
+        <div class="row">
+          <input id="f-image" type="text" placeholder="/ruta/a/imagen.png">
+          <button class="pill outline purple small" onclick="browse('image')">Buscar</button>
+        </div>
+
+        <div id="wineprefix-field">
+          <label class="field-label">WINEPREFIX (solo Wine)</label>
+          <div class="row">
+            <input id="f-wineprefix" type="text" placeholder="~/.wine">
+            <button class="pill outline purple small" onclick="browseFolder()">Buscar</button>
+          </div>
+        </div>
+
+        <div id="compat-field">
+          <label class="field-label">Compatibilidad retro</label>
+          <p class="field-hint">Para juegos viejos que Wine no corre bien con la config por defecto (Age of Empires, juegos DOS, etc.)</p>
+          <select id="f-compat-preset"></select>
+          <p class="compat-preset-desc" id="compatPresetDesc"></p>
+
+          <div id="compatCustomWineField" class="hidden">
+            <label class="field-label">Binario de Wine a usar</label>
+            <div class="row">
+              <input id="f-custom-wine" type="text" placeholder="/ruta/a/wine">
+              <button class="pill outline purple small" id="compatBrowseWineBtn" type="button">Buscar</button>
+            </div>
+            <p class="compat-wine-check" id="compatWineCheck"></p>
+          </div>
+
+          <div class="compat-req-list" id="compatReqList"></div>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="pill outline pink" onclick="closeAddModal()">Cancelar</button>
+        <button class="pill solid" id="submitAddBtn" onclick="submitAdd()" disabled>Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: logs -->
+  <div id="logsModal" class="modal-overlay hidden">
+    <div class="modal wide">
+      <h2>Logs de errores</h2>
+      <pre id="logsBox"></pre>
+      <div class="modal-actions">
+        <button class="pill outline cyan" onclick="refreshLogs()">Refrescar</button>
+        <button class="pill outline pink" onclick="clearLogs()">Limpiar</button>
+        <button class="pill outline purple" onclick="closeLogs()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Wine Setup (sakura) -->
+  <div id="sakuraModal" class="modal-overlay hidden">
+    <div class="modal sakura-modal">
+
+      <div class="sakura-petals-bg" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+
+      <div class="sakura-head">
+        <div class="sakura-bloom">
+          <svg viewBox="0 0 100 100" class="sakura-bloom-svg">
+            <g class="sakura-bloom-petal" data-p="1"><path d="M50 50 C40 30, 20 25, 12 10 C28 15, 42 28, 50 50 Z"/></g>
+            <g class="sakura-bloom-petal" data-p="2"><path d="M50 50 C65 32, 85 30, 96 16 C85 28, 68 32, 50 50 Z"/></g>
+            <g class="sakura-bloom-petal" data-p="3"><path d="M50 50 C62 62, 82 68, 92 84 C76 78, 62 68, 50 50 Z"/></g>
+            <g class="sakura-bloom-petal" data-p="4"><path d="M50 50 C36 65, 18 68, 6 86 C18 72, 34 66, 50 50 Z"/></g>
+            <g class="sakura-bloom-petal" data-p="5"><path d="M50 50 C55 30, 48 12, 54 2 C58 16, 58 34, 50 50 Z"/></g>
+            <circle cx="50" cy="50" r="6" class="sakura-bloom-core"/>
+          </svg>
+        </div>
+        <h2>Wine Setup</h2>
+        <p class="sakura-sub" id="sakuraDistro">Detectando distribución…</p>
+      </div>
+
+      <div class="sakura-req-list" id="sakuraReqList"></div>
+
+      <div class="sakura-progress-wrap hidden" id="sakuraProgressWrap">
+        <svg viewBox="0 0 100 100" class="sakura-progress-petal">
+          <defs>
+            <clipPath id="sakuraClip">
+              <path d="M50 50 C40 30,20 25,12 10 C28 15,42 28,50 50
+                       C65 32,85 30,96 16 C85 28,68 32,50 50
+                       C62 62,82 68,92 84 C76 78,62 68,50 50
+                       C36 65,18 68,6 86 C18 72,34 66,50 50
+                       C55 30,48 12,54 2 C58 16,58 34,50 50 Z"/>
+            </clipPath>
+          </defs>
+          <path class="sakura-progress-outline"
+                d="M50 50 C40 30,20 25,12 10 C28 15,42 28,50 50
+                   C65 32,85 30,96 16 C85 28,68 32,50 50
+                   C62 62,82 68,92 84 C76 78,62 68,50 50
+                   C36 65,18 68,6 86 C18 72,34 66,50 50
+                   C55 30,48 12,54 2 C58 16,58 34,50 50 Z"/>
+          <g clip-path="url(#sakuraClip)">
+            <rect id="sakuraFill" x="0" y="100" width="100" height="0" class="sakura-progress-fill"/>
+          </g>
+        </svg>
+        <div class="sakura-progress-text">
+          <span id="sakuraProgressPct">0%</span>
+          <span class="sakura-progress-label" id="sakuraProgressLabel">Preparando…</span>
+        </div>
+      </div>
+
+      <div class="sakura-log hidden" id="sakuraLog"></div>
+
+      <div class="modal-actions">
+        <button class="pill outline pink" id="sakuraCloseBtn" onclick="closeSakuraModal()">Cerrar</button>
+        <button class="pill solid" id="sakuraInstallBtn" onclick="startWineInstall()" disabled>Instalar pendientes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Configurar Wine -->
+  <div id="wineConfigModal" class="modal-overlay hidden">
+    <div class="modal sakura-modal wine-config-modal">
+
+      <div class="sakura-petals-bg" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+
+      <div class="sakura-head">
+        <div class="sakura-bloom">
+          <svg viewBox="0 0 100 100" class="sakura-bloom-svg">
+            <g class="sakura-bloom-petal" data-p="1"><path d="M50 50 C40 30, 20 25, 12 10 C28 15, 42 28, 50 50 Z"/></g>
+            <g class="sakura-bloom-petal" data-p="2"><path d="M50 50 C65 32, 85 30, 96 16 C85 28, 68 32, 50 50 Z"/></g>
+            <g class="sakura-bloom-petal" data-p="3"><path d="M50 50 C62 62, 82 68, 92 84 C76 78, 62 68, 50 50 Z"/></g>
+            <g class="sakura-bloom-petal" data-p="4"><path d="M50 50 C36 65, 18 68, 6 86 C18 72, 34 66, 50 50 Z"/></g>
+            <g class="sakura-bloom-petal" data-p="5"><path d="M50 50 C55 30, 48 12, 54 2 C58 16, 58 34, 50 50 Z"/></g>
+            <circle cx="50" cy="50" r="6" class="sakura-bloom-core"/>
+          </svg>
+        </div>
+        <h2>Configurar Wine</h2>
+        <p class="sakura-sub">Optimizá, ajustá y mantené tu entorno Wine</p>
+      </div>
+
+      <div class="wc-body">
+
+        <label class="field-label">Prefix a configurar</label>
+        <div class="row">
+          <input id="wcPrefixInput" type="text" placeholder="~/.wine">
+          <button class="pill outline purple small" id="wcBrowsePrefixBtn" type="button">Buscar</button>
+        </div>
+
+        <label class="field-label">Optimización de rendimiento</label>
+        <div class="wc-toggle-list">
+          <label class="wc-toggle">
+            <input type="checkbox" id="wcEsync">
+            <span class="wc-toggle-info">
+              <span class="wc-toggle-name">ESYNC</span>
+              <span class="wc-toggle-desc">Sincronización eficiente entre hilos, mejora el rendimiento general</span>
+            </span>
+          </label>
+          <label class="wc-toggle">
+            <input type="checkbox" id="wcFsync">
+            <span class="wc-toggle-info">
+              <span class="wc-toggle-name">FSYNC</span>
+              <span class="wc-toggle-desc">Alternativa más rápida a ESYNC, requiere kernel con soporte futex2</span>
+            </span>
+          </label>
+          <label class="wc-toggle">
+            <input type="checkbox" id="wcDebugOff">
+            <span class="wc-toggle-info">
+              <span class="wc-toggle-name">Reducir logs de depuración</span>
+              <span class="wc-toggle-desc">Desactiva el registro interno de Wine, baja el uso de CPU/disco</span>
+            </span>
+          </label>
+        </div>
+
+        <label class="field-label">Versión de Windows emulada</label>
+        <div class="row">
+          <select id="wcWinVersion"></select>
+          <button class="pill outline purple small" id="wcApplyVersionBtn" type="button">Aplicar</button>
+        </div>
+
+        <label class="field-label">Acciones</label>
+        <div class="wc-actions-grid">
+          <button class="wc-action-btn" id="wcOpenWinecfg" type="button">
+            <svg viewBox="0 0 24 24"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/><path d="M19.4 13.5c.04-.5.04-1 0-1.5l1.9-1.4-2-3.4-2.2.7c-.4-.3-.8-.6-1.3-.8L15.4 5h-4l-.4 2.1c-.5.2-.9.5-1.3.8l-2.2-.7-2 3.4 1.9 1.4c-.04.5-.04 1 0 1.5l-1.9 1.4 2 3.4 2.2-.7c.4.3.8.6 1.3.8L11.4 21h4l.4-2.1c.5-.2.9-.5 1.3-.8l2.2.7 2-3.4-1.9-1.4Z"/></svg>
+            <span>Configuración de Wine</span>
+          </button>
+          <button class="wc-action-btn" id="wcOpenWinetricks" type="button">
+            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 4v16"/></svg>
+            <span>Administrador de bibliotecas</span>
+          </button>
+          <button class="wc-action-btn" id="wcOpenFolder" type="button">
+            <svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>
+            <span>Abrir carpeta del prefix</span>
+          </button>
+          <button class="wc-action-btn" id="wcResetPrefix" type="button">
+            <svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7M21 4v5h-5"/></svg>
+            <span>Reiniciar prefix</span>
+          </button>
+          <button class="wc-action-btn danger" id="wcCleanCache" type="button">
+            <svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-13"/></svg>
+            <span>Limpiar caché temporal</span>
+          </button>
+        </div>
+
+        <div class="sakura-log" id="wcLog"></div>
+
+      </div>
+
+      <div class="modal-actions">
+        <button class="pill outline pink" onclick="closeWineConfigModal()">Cerrar</button>
+        <button class="pill solid" id="wcSaveBtn" type="button">Guardar optimización</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: FPStation (configuración del overlay de rendimiento) -->
+  <div id="fpstationModal" class="modal-overlay hidden">
+    <div class="modal sakura-modal fpstation-modal">
+
+      <div class="sakura-petals-bg" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+
+      <div class="sakura-head">
+        <div class="sakura-bloom">
+          <svg viewBox="0 0 100 100" class="sakura-bloom-svg">
+            <g class="sakura-bloom-petal" data-p="1"><path d="M50 50 C40 30, 20 25, 12 10 C28 15, 42 28, 50 50 Z"/></g>
+            <g class="sakura-bloom-petal" data-p="2"><path d="M50 50 C65 32, 85 30, 96 16 C85 28, 68 32, 50 50 Z"/></g>
+            <g class="sakura-bloom-petal" data-p="3"><path d="M50 50 C62 62, 82 68, 92 84 C76 78, 62 68, 50 50 Z"/></g>
+            <g class="sakura-bloom-petal" data-p="4"><path d="M50 50 C36 65, 18 68, 6 86 C18 72, 34 66, 50 50 Z"/></g>
+            <g class="sakura-bloom-petal" data-p="5"><path d="M50 50 C55 30, 48 12, 54 2 C58 16, 58 34, 50 50 Z"/></g>
+            <circle cx="50" cy="50" r="6" class="sakura-bloom-core"/>
+          </svg>
+        </div>
+        <h2>FPStation</h2>
+        <p class="sakura-sub">Overlay de rendimiento en tiempo real</p>
+      </div>
+
+      <div class="wc-body">
+        <label class="wc-toggle fp-master-toggle">
+          <input type="checkbox" id="fpEnabledCheck">
+          <span class="wc-toggle-info">
+            <span class="wc-toggle-name">Activar FPStation</span>
+            <span class="wc-toggle-desc">Se abre solo al lanzar una app y se cierra sola al terminar</span>
+          </span>
+        </label>
+
+        <p class="fp-mangohud-warning hidden" id="fpMangohudWarning">
+          MangoHud no está instalado: el overlay va a funcionar igual, pero sin el dato de FPS. Revisá Diagnóstico para instalarlo.
+        </p>
+
+        <label class="field-label" style="margin-top: 14px; display: block;">Métricas a mostrar</label>
+        <div class="wc-toggle-list">
+          <label class="wc-toggle">
+            <input type="checkbox" id="fpMetricFps" class="fp-metric-check">
+            <span class="wc-toggle-info">
+              <span class="wc-toggle-name">FPS</span>
+              <span class="wc-toggle-desc">Cuadros por segundo, medidos con MangoHud</span>
+            </span>
+          </label>
+          <label class="wc-toggle">
+            <input type="checkbox" id="fpMetricCpu" class="fp-metric-check">
+            <span class="wc-toggle-info">
+              <span class="wc-toggle-name">CPU</span>
+              <span class="wc-toggle-desc">Uso global del procesador</span>
+            </span>
+          </label>
+          <label class="wc-toggle">
+            <input type="checkbox" id="fpMetricRam" class="fp-metric-check">
+            <span class="wc-toggle-info">
+              <span class="wc-toggle-name">Memoria RAM</span>
+              <span class="wc-toggle-desc">Memoria usada sobre el total del sistema</span>
+            </span>
+          </label>
+          <label class="wc-toggle">
+            <input type="checkbox" id="fpMetricBattery" class="fp-metric-check">
+            <span class="wc-toggle-info">
+              <span class="wc-toggle-name">Batería</span>
+              <span class="wc-toggle-desc">Porcentaje y si está cargando (si tu equipo tiene batería)</span>
+            </span>
+          </label>
+          <label class="wc-toggle">
+            <input type="checkbox" id="fpMetricDisk" class="fp-metric-check">
+            <span class="wc-toggle-info">
+              <span class="wc-toggle-name">Disco</span>
+              <span class="wc-toggle-desc">Espacio usado en la unidad del launcher</span>
+            </span>
+          </label>
+          <label class="wc-toggle">
+            <input type="checkbox" id="fpMetricNet" class="fp-metric-check">
+            <span class="wc-toggle-info">
+              <span class="wc-toggle-name">Red</span>
+              <span class="wc-toggle-desc">Velocidad de descarga y subida aproximada</span>
+            </span>
+          </label>
+        </div>
+
+        <div class="fp-config-row">
+          <label class="field-hint" for="fpPositionSelect">Posición en pantalla</label>
+          <select id="fpPositionSelect">
+            <option value="top-right">Arriba a la derecha</option>
+            <option value="top-left">Arriba a la izquierda</option>
+            <option value="bottom-right">Abajo a la derecha</option>
+            <option value="bottom-left">Abajo a la izquierda</option>
+          </select>
+        </div>
+
+        <div class="fp-config-row">
+          <label class="field-hint" for="fpRefreshSelect">Frecuencia de actualización</label>
+          <select id="fpRefreshSelect">
+            <option value="500">Rápida (0.5s)</option>
+            <option value="1000">Normal (1s)</option>
+            <option value="2000">Ahorro (2s)</option>
+          </select>
+        </div>
+
+        <p class="field-hint" style="margin-top: 10px;">
+          La ventanita se puede arrastrar con el mouse a cualquier parte de la pantalla mientras está abierta.
+        </p>
+      </div>
+
+      <div class="modal-actions">
+        <button class="pill outline pink" onclick="closeFpstationModal()">Cerrar</button>
+        <button class="pill solid" id="fpSaveBtn" type="button">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Temas -->
+  <div id="themesModal" class="modal-overlay hidden">
+    <div class="modal sakura-modal wide themes-modal">
+
+      <div class="sakura-petals-bg" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+
+      <div class="sakura-head">
+        <div class="sakura-bloom">
+          <svg viewBox="0 0 100 100" class="sakura-bloom-svg">
+            <g class="sakura-bloom-petal" data-p="1"><path d="M50 50 C40 30, 20 25, 12 10 C28 15, 42 28, 50 50 Z"/></g>
+            <g class="sakura-bloom-petal" data-p="2"><path d="M50 50 C65 32, 85 30, 96 16 C85 28, 68 32, 50 50 Z"/></g>
+            <g class="sakura-bloom-petal" data-p="3"><path d="M50 50 C62 62, 82 68, 92 84 C76 78, 62 68, 50 50 Z"/></g>
+            <g class="sakura-bloom-petal" data-p="4"><path d="M50 50 C36 65, 18 68, 6 86 C18 72, 34 66, 50 50 Z"/></g>
+            <g class="sakura-bloom-petal" data-p="5"><path d="M50 50 C55 30, 48 12, 54 2 C58 16, 58 34, 50 50 Z"/></g>
+            <circle cx="50" cy="50" r="6" class="sakura-bloom-core"/>
+          </svg>
+        </div>
+        <h2>Temas</h2>
+        <p class="sakura-sub">Editá el CSS del launcher, guardá y compartí tus propios temas</p>
+      </div>
+
+      <div class="wc-body themes-body">
+
+        <label class="field-label">Editor de CSS (style.css)</label>
+        <textarea id="cssEditorText" class="css-editor" spellcheck="false" wrap="off"></textarea>
+
+        <div class="theme-toolbar">
+          <button class="pill solid" id="themeApplyBtn" type="button">Aplicar cambios</button>
+          <button class="pill outline cyan small" id="themeUndoBtn" type="button">Deshacer último cambio</button>
+          <button class="pill outline pink small" id="themeResetBtn" type="button">Restaurar predeterminado</button>
+        </div>
+        <div class="theme-toolbar">
+          <button class="pill outline purple small" id="themeImportBtn" type="button">Importar CSS…</button>
+          <button class="pill outline purple small" id="themeExportBtn" type="button">Exportar CSS…</button>
+          <button class="pill outline purple small" id="themeSaveAsBtn" type="button">Guardar como tema…</button>
+        </div>
+
+        <div class="sakura-log" id="themeLog"></div>
+
+        <label class="field-label">Temas guardados</label>
+        <div class="theme-list" id="themeList"></div>
+
+      </div>
+
+      <div class="modal-actions">
+        <button class="pill outline pink" onclick="closeThemesModal()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Detección automática -->
+  <div id="detectModal" class="modal-overlay hidden">
+    <div class="modal sakura-modal wide">
+      <div class="sakura-petals-bg" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <div class="sakura-head">
+        <div class="sakura-bloom">
+          <svg viewBox="0 0 100 100" class="sakura-bloom-svg">
+            <g class="sakura-bloom-petal" data-p="1"><path d="M50 50 C40 30, 20 25, 12 10 C28 15, 42 28, 50 50 Z"/></g>
+            <g class="sakura-bloom-petal" data-p="2"><path d="M50 50 C65 32, 85 30, 96 16 C85 28, 68 32, 50 50 Z"/></g>
+            <g class="sakura-bloom-petal" data-p="3"><path d="M50 50 C62 62, 82 68, 92 84 C76 78, 62 68, 50 50 Z"/></g>
+            <g class="sakura-bloom-petal" data-p="4"><path d="M50 50 C36 65, 18 68, 6 86 C18 72, 34 66, 50 50 Z"/></g>
+            <g class="sakura-bloom-petal" data-p="5"><path d="M50 50 C55 30, 48 12, 54 2 C58 16, 58 34, 50 50 Z"/></g>
+            <circle cx="50" cy="50" r="6" class="sakura-bloom-core"/>
+          </svg>
+        </div>
+        <h2>Detección automática</h2>
+        <p class="sakura-sub" id="detectSub">Buscando en Steam, Lutris y prefixes de Wine…</p>
+      </div>
+
+      <div class="sakura-req-list" id="detectList"></div>
+
+      <div class="modal-actions">
+        <button class="pill outline pink" id="detectCloseBtn" onclick="closeDetectModal()">Cerrar</button>
+        <button class="pill outline cyan" id="detectRescanBtn" type="button">Volver a buscar</button>
+        <button class="pill solid" id="detectAddBtn" type="button" disabled>Agregar seleccionadas</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Diagnóstico -->
+  <div id="diagnosticsModal" class="modal-overlay hidden">
+    <div class="modal sakura-modal wide">
+      <div class="sakura-petals-bg" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <div class="sakura-head">
+        <div class="sakura-bloom">
+          <svg viewBox="0 0 100 100" class="sakura-bloom-svg">
+            <g class="sakura-bloom-petal" data-p="1"><path d="M50 50 C40 30, 20 25, 12 10 C28 15, 42 28, 50 50 Z"/></g>
+            <g class="sakura-bloom-petal" data-p="2"><path d="M50 50 C65 32, 85 30, 96 16 C85 28, 68 32, 50 50 Z"/></g>
+            <g class="sakura-bloom-petal" data-p="3"><path d="M50 50 C62 62, 82 68, 92 84 C76 78, 62 68, 50 50 Z"/></g>
+            <g class="sakura-bloom-petal" data-p="4"><path d="M50 50 C36 65, 18 68, 6 86 C18 72, 34 66, 50 50 Z"/></g>
+            <g class="sakura-bloom-petal" data-p="5"><path d="M50 50 C55 30, 48 12, 54 2 C58 16, 58 34, 50 50 Z"/></g>
+            <circle cx="50" cy="50" r="6" class="sakura-bloom-core"/>
+          </svg>
+        </div>
+        <h2>Diagnóstico</h2>
+        <p class="sakura-sub">Estado del entorno para correr tus apps</p>
+      </div>
+
+      <div class="diag-list" id="diagList"></div>
+
+      <div class="sakura-log" id="diagLog"></div>
+
+      <div class="modal-actions">
+        <button class="pill outline pink" onclick="closeDiagnosticsModal()">Cerrar</button>
+        <button class="pill outline cyan" id="diagRefreshBtn" type="button">Actualizar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Preparar aplicación -->
+  <div id="prepareModal" class="modal-overlay hidden">
+    <div class="modal sakura-modal">
+      <div class="sakura-petals-bg" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <div class="sakura-head">
+        <div class="sakura-bloom">
+          <svg viewBox="0 0 100 100" class="sakura-bloom-svg">
+            <g class="sakura-bloom-petal" data-p="1"><path d="M50 50 C40 30, 20 25, 12 10 C28 15, 42 28, 50 50 Z"/></g>
+            <g class="sakura-bloom-petal" data-p="2"><path d="M50 50 C65 32, 85 30, 96 16 C85 28, 68 32, 50 50 Z"/></g>
+            <g class="sakura-bloom-petal" data-p="3"><path d="M50 50 C62 62, 82 68, 92 84 C76 78, 62 68, 50 50 Z"/></g>
+            <g class="sakura-bloom-petal" data-p="4"><path d="M50 50 C36 65, 18 68, 6 86 C18 72, 34 66, 50 50 Z"/></g>
+            <g class="sakura-bloom-petal" data-p="5"><path d="M50 50 C55 30, 48 12, 54 2 C58 16, 58 34, 50 50 Z"/></g>
+            <circle cx="50" cy="50" r="6" class="sakura-bloom-core"/>
+          </svg>
+        </div>
+        <h2>Preparar aplicación</h2>
+        <p class="sakura-sub" id="prepareSub">Analizando requisitos…</p>
+      </div>
+
+      <div class="sakura-req-list" id="prepareList"></div>
+
+      <div class="sakura-progress-wrap hidden" id="prepareProgressWrap">
+        <svg viewBox="0 0 100 100" class="sakura-progress-petal">
+          <defs>
+            <clipPath id="prepareClip">
+              <path d="M50 50 C40 30,20 25,12 10 C28 15,42 28,50 50
+                       C65 32,85 30,96 16 C85 28,68 32,50 50
+                       C62 62,82 68,92 84 C76 78,62 68,50 50
+                       C36 65,18 68,6 86 C18 72,34 66,50 50
+                       C55 30,48 12,54 2 C58 16,58 34,50 50 Z"/>
+            </clipPath>
+          </defs>
+          <path class="sakura-progress-outline"
+                d="M50 50 C40 30,20 25,12 10 C28 15,42 28,50 50
+                   C65 32,85 30,96 16 C85 28,68 32,50 50
+                   C62 62,82 68,92 84 C76 78,62 68,50 50
+                   C36 65,18 68,6 86 C18 72,34 66,50 50
+                   C55 30,48 12,54 2 C58 16,58 34,50 50 Z"/>
+          <g clip-path="url(#prepareClip)">
+            <rect id="prepareFill" x="0" y="100" width="100" height="0" class="sakura-progress-fill"/>
+          </g>
+        </svg>
+        <div class="sakura-progress-text">
+          <span id="prepareProgressPct">0%</span>
+          <span class="sakura-progress-label" id="prepareProgressLabel">Preparando…</span>
+        </div>
+      </div>
+
+      <div class="sakura-log hidden" id="prepareLog"></div>
+
+      <div class="modal-actions">
+        <button class="pill outline pink" id="prepareCloseBtn" onclick="closePrepareModal()">Cerrar</button>
+        <button class="pill solid" id="prepareStartBtn" type="button">Preparar ahora</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Backup -->
+  <div id="backupModal" class="modal-overlay hidden">
+    <div class="modal sakura-modal">
+      <div class="sakura-petals-bg" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <div class="sakura-head">
+        <div class="sakura-bloom">
+          <svg viewBox="0 0 100 100" class="sakura-bloom-svg">
+            <g class="sakura-bloom-petal" data-p="1"><path d="M50 50 C40 30, 20 25, 12 10 C28 15, 42 28, 50 50 Z"/></g>
+            <g class="sakura-bloom-petal" data-p="2"><path d="M50 50 C65 32, 85 30, 96 16 C85 28, 68 32, 50 50 Z"/></g>
+            <g class="sakura-bloom-petal" data-p="3"><path d="M50 50 C62 62, 82 68, 92 84 C76 78, 62 68, 50 50 Z"/></g>
+            <g class="sakura-bloom-petal" data-p="4"><path d="M50 50 C36 65, 18 68, 6 86 C18 72, 34 66, 50 50 Z"/></g>
+            <g class="sakura-bloom-petal" data-p="5"><path d="M50 50 C55 30, 48 12, 54 2 C58 16, 58 34, 50 50 Z"/></g>
+            <circle cx="50" cy="50" r="6" class="sakura-bloom-core"/>
+          </svg>
+        </div>
+        <h2>Backup</h2>
+        <p class="sakura-sub">Exportá o restaurá toda tu biblioteca en un solo archivo</p>
+      </div>
+
+      <p class="field-hint backup-hint">
+        El backup incluye tus apps, favoritos, categorías, configuración de Wine,
+        estadísticas de tiempo jugado y los temas que tengas guardados.
+      </p>
+
+      <div class="backup-actions">
+        <button class="wc-action-btn" id="backupExportBtn" type="button">
+          <svg viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+          <span>Exportar biblioteca completa</span>
+        </button>
+        <button class="wc-action-btn" id="backupImportBtn" type="button">
+          <svg viewBox="0 0 24 24"><path d="M12 21V9m0 0-4 4m4-4 4 4"/><path d="M4 7V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2"/></svg>
+          <span>Importar backup…</span>
+        </button>
+      </div>
+
+      <div class="sakura-log" id="backupLog"></div>
+
+      <div class="modal-actions">
+        <button class="pill outline pink" onclick="closeBackupModal()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Actualizador -->
+  <div id="updateModal" class="modal-overlay hidden">
+    <div class="modal">
+      <h2>Actualización disponible</h2>
+      <p class="add-modal-sub" id="updateText">—</p>
+      <div class="sakura-log" id="updateNotes"></div>
+      <div class="modal-actions">
+        <button class="pill outline pink" id="updateDismissBtn" type="button">Ignorar esta versión</button>
+        <button class="pill outline cyan" onclick="closeUpdateModal()">Más tarde</button>
+        <button class="pill solid" id="updateOpenBtn" type="button">Ver descarga</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Conectar Discord -->
+  <div id="discordConfigModal" class="modal-overlay hidden">
+    <div class="modal discord-config-modal">
+      <h2>Conectar con Discord</h2>
+      <p class="add-modal-sub">
+        Para vincular tu cuenta necesitás tu propia aplicación de Discord (es gratis).
+        Creála en <span class="discord-dev-link" id="discordDevPortalLink">discord.com/developers/applications</span>,
+        agregá este Redirect URI en OAuth2 y pegá acá el Client ID y el Client Secret.
+      </p>
+      <div class="discord-redirect-box" id="discordRedirectBox">—</div>
+
+      <label class="field-label">Client ID</label>
+      <input id="f-discord-client-id" type="text" placeholder="1234567890123456">
+
+      <label class="field-label">Client Secret</label>
+      <input id="f-discord-client-secret" type="password" placeholder="••••••••••••••••">
+
+      <div class="modal-actions">
+        <button class="pill outline pink" onclick="closeDiscordConfigModal()">Cancelar</button>
+        <button class="pill solid" id="discordConfigSaveBtn" type="button">Guardar y conectar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

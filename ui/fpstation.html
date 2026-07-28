@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>FPStation</title>
+<style>
+  /* FPStation: overlay de rendimiento en tiempo real. Ventana propia,
+     siempre-encima, sin bordes de sistema — decorada con los mismos tokens
+     de color que el resto de Sakura Launcher, pero minimalista para no
+     taparle la pantalla al juego. Fondo transparente: solo se ve la
+     "tarjeta" del overlay. */
+  :root {
+    --purple: #ff3d94;
+    --pink: #ffb0d3;
+    --cyan: #ffcf7e;
+    --text: #fbeaf1;
+    --text-dim: #caa0b3;
+    --panel: rgba(29, 15, 22, 0.88);
+    --border: rgba(255, 176, 211, 0.22);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: "Segoe UI", -apple-system, "Noto Sans", sans-serif;
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: move; /* toda la ventana se arrastra (easy_drag en pywebview) */
+  }
+
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    height: 100%;
+    padding: 10px 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--panel);
+    backdrop-filter: blur(6px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  }
+
+  .fp-head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: .3px;
+    color: var(--pink);
+    text-transform: uppercase;
+    opacity: .85;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .fp-petal { flex-shrink: 0; width: 10px; height: 10px; }
+  .fp-petal path { fill: var(--purple); }
+  .fp-app-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .fp-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px 10px;
+    flex: 1;
+  }
+  .fp-metric {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    min-width: 0;
+  }
+  .fp-metric-label {
+    font-size: 9.5px;
+    font-weight: 700;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: .2px;
+    flex-shrink: 0;
+  }
+  .fp-metric-value {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .fp-metric-value.warn { color: var(--cyan); }
+  .fp-metric-value.crit { color: var(--purple); }
+
+  .fp-empty {
+    font-size: 10.5px;
+    color: var(--text-dim);
+    text-align: center;
+    padding: 6px 0;
+  }
+
+  .fp-resize-handle {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 16px;
+    height: 16px;
+    cursor: nwse-resize;
+    z-index: 10;
+  }
+  .fp-resize-handle::after {
+    content: "";
+    position: absolute;
+    right: 3px;
+    bottom: 3px;
+    width: 7px;
+    height: 7px;
+    border-right: 2px solid var(--text-dim);
+    border-bottom: 2px solid var(--text-dim);
+    opacity: .6;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="fp-head">
+      <svg class="fp-petal" viewBox="0 0 24 24"><path d="M12 12C9 8 4 7 2 3c4 1 8 4 10 9Z"/></svg>
+      <span class="fp-app-name" id="fpAppName">FPStation</span>
+    </div>
+    <div class="fp-grid" id="fpGrid">
+      <div class="fp-empty">Esperando datos…</div>
+    </div>
+    <div class="fp-resize-handle" id="fpResizeHandle"></div>
+  </div>
+
+  <script>
+    // Estado de qué métricas mostrar llega calculado desde Python en cada
+    // evento (el backend ya filtra según la config del usuario), así que
+    // acá simplemente pintamos lo que venga en el payload.
+    const METRIC_ORDER = ["fps", "cpu_percent", "ram", "battery", "disk", "net"];
+
+    function fmtMetric(key, detail) {
+      switch (key) {
+        case "fps":
+          if (detail.fps == null) return null;
+          return { label: "FPS", value: `${detail.fps}`, cls: detail.fps < 30 ? "crit" : detail.fps < 50 ? "warn" : "" };
+        case "cpu_percent":
+          if (detail.cpu_percent == null) return null;
+          return { label: "CPU", value: `${detail.cpu_percent}%`, cls: detail.cpu_percent > 90 ? "crit" : detail.cpu_percent > 70 ? "warn" : "" };
+        case "ram":
+          if (!detail.ram) return null;
+          return { label: "RAM", value: `${detail.ram.used_mb}/${detail.ram.total_mb} MB`, cls: detail.ram.percent > 90 ? "crit" : "" };
+        case "battery":
+          if (!detail.battery) return null;
+          return { label: "Batería", value: `${detail.battery.percent}%${detail.battery.charging ? " ⚡" : ""}`, cls: (!detail.battery.charging && detail.battery.percent < 20) ? "crit" : "" };
+        case "disk":
+          if (!detail.disk) return null;
+          return { label: "Disco", value: `${detail.disk.used_gb}/${detail.disk.total_gb} GB`, cls: detail.disk.percent > 90 ? "crit" : "" };
+        case "net":
+          if (!detail.net) return null;
+          return { label: "Red", value: `↓${detail.net.down_kbps} ↑${detail.net.up_kbps} KB/s`, cls: "" };
+        default:
+          return null;
+      }
+    }
+
+    (function initResize() {
+      const handle = document.getElementById("fpResizeHandle");
+      let dragging = false, startX = 0, startY = 0, startW = 0, startH = 0;
+
+      handle.addEventListener("mousedown", (e) => {
+        dragging = true;
+        startX = e.screenX;
+        startY = e.screenY;
+        startW = window.innerWidth;
+        startH = window.innerHeight;
+        e.preventDefault();
+        e.stopPropagation();
+      });
+
+      window.addEventListener("mousemove", (e) => {
+        if (!dragging) return;
+        const w = Math.max(140, startW + (e.screenX - startX));
+        const h = Math.max(90, startH + (e.screenY - startY));
+        if (window.pywebview && window.pywebview.api) {
+          window.pywebview.api.fpstation_resize(w, h);
+        }
+      });
+
+      window.addEventListener("mouseup", () => { dragging = false; });
+    })();
+
+    window.addEventListener("fpstation-update", (e) => {
+      const detail = e.detail || {};
+      document.getElementById("fpAppName").textContent = detail.app_name || "FPStation";
+
+      const grid = document.getElementById("fpGrid");
+      const cells = METRIC_ORDER.map(key => fmtMetric(key, detail)).filter(Boolean);
+
+      if (cells.length === 0) {
+        grid.innerHTML = `<div class="fp-empty">Sin métricas activadas</div>`;
+        return;
+      }
+
+      grid.innerHTML = cells.map(c => `
+        <div class="fp-metric">
+          <span class="fp-metric-label">${c.label}</span>
+          <span class="fp-metric-value ${c.cls}">${c.value}</span>
+        </div>
+      `).join("");
+    });
+  </script>
+</body>
+</html>
