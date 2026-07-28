@@ -21,19 +21,7 @@ import http.server
 import webview
 import requests
 
-# pystray es opcional: si no está instalado, la bandeja del sistema se
-# desactiva sola sin romper el resto del launcher (ver TrayManager).
-#
-# Por defecto forzamos el backend "xorg" (X11 puro, vía python-xlib, que ya
-# viene como dependencia de pystray) en vez del backend "appindicator"/GTK
-# que pystray elige solo en la mayoría de distros. El backend GTK corre su
-# propio main loop de GLib, y pywebview levanta el suyo: ambos compitiendo
-# por el mismo contexto termina en "g_application_run() cannot acquire the
-# default main context because it is already acquired by another thread"
-# (y el proceso se cae al arrancar). El backend xorg no toca GLib para nada,
-# así que no hay con qué chocar.
-# Si ya definiste PYSTRAY_BACKEND vos mismo (por ejemplo para forzar
-# "appindicator" en un entorno donde sí lo necesitás), se respeta tu valor.
+
 os.environ.setdefault("PYSTRAY_BACKEND", "xorg")
 try:
     import pystray
@@ -44,29 +32,16 @@ except Exception:
 
 from paths import ASSETS_DIR, DATA_DIR
 
-# BASE_DIR queda como alias de DATA_DIR: todo lo que antes se guardaba "al
-# lado del script" ahora se guarda en una carpeta de usuario escribible y
-# estable (necesario para poder empaquetar como AppImage, que monta el
-# código en una ruta de solo lectura que además cambia en cada ejecución).
 BASE_DIR = DATA_DIR
 CONFIG_FILE = os.path.join(BASE_DIR, "backstage_apps.json")
 WINE_CONFIG_FILE = os.path.join(BASE_DIR, "backstage_wine_config.json")
 THEMES_REGISTRY_FILE = os.path.join(BASE_DIR, "backstage_themes.json")
 LOG_FILE = os.path.join(BASE_DIR, "backstage_errors.log")
 
-# FPStation: overlay de rendimiento en tiempo real (FPS/CPU/RAM/batería) que
-# se abre en una ventana propia, siempre-encima, mientras el launcher tiene
-# una app abierta. Config propia (qué métricas mostrar, posición, intervalo)
-# y una carpeta donde MangoHud vuelca su log de FPS por sesión, que FPStation
-# lee en vivo mientras la app está corriendo.
 FPSTATION_FILE = os.path.join(BASE_DIR, "backstage_fpstation.json")
 FPSTATION_LOGS_DIR = os.path.join(BASE_DIR, "fpstation_logs")
 os.makedirs(FPSTATION_LOGS_DIR, exist_ok=True)
 
-# ui/: el código fuente (index.html/app.js/style.css "de fábrica") vive
-# empaquetado en ASSETS_DIR y puede ser de solo lectura. Lo que el webview
-# realmente carga es una copia en DATA_DIR/ui, que sí es escribible (el
-# editor de temas necesita poder pisar style.css, por ejemplo).
 UI_SRC_DIR = os.path.join(ASSETS_DIR, "ui")
 UI_DIR = os.path.join(BASE_DIR, "ui")
 UI_INDEX = os.path.join(UI_DIR, "index.html")
